@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+# setting php.ini
+if [ 0 -ne "${PHP_DEVELOP_ENV:-0}" ] ; then
+    ln -fs php.ini-development /usr/local/etc/php/php.ini
+    echo "Setting php.ini with development"
+else
+    ln -fs php.ini-production /usr/local/etc/php/php.ini
+    echo "Setting php.ini with production"
+fi
+
+# first arg is `-f` or `--some-option`
+if [ "${1#-}" != "$1" ]; then
+    set -- php-fpm "$@"
+fi
+
+exec "$@"
